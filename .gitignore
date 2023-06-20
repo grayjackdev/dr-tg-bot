@@ -1,2 +1,4 @@
 .env
 /venv
+Dockerfile
+__pycache__

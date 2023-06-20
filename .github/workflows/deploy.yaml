@@ -1,0 +1,20 @@
+name: MyApp's Workflow
+
+on: 
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - '.github/workflows/*'
+
+jobs:
+  run:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.HOST }}
+          user: ${{ secrets.USER }}
+          pass: ${{ secrets.PASS }}
+          script: |
+            docker pull anaevskiy/drbot
