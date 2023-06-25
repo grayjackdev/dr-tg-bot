@@ -2,3 +2,4 @@
 /venv
 Dockerfile
 __pycache__
+/photos
