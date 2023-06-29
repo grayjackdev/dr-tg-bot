@@ -6,6 +6,7 @@ from db import Employee, Wish
 from keyboards import skip_markup, group_link_markup, finish_markup
 import datetime
 
+
 @dp.message_handler(commands=['start'])
 async def start_bot(message: Message, state: FSMContext):
     async with async_session() as session:
