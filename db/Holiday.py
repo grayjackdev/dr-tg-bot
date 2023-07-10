@@ -24,8 +24,7 @@ class Holiday(Base):
     status = Column(Enum(StatusHoliday), default=StatusHoliday.waiting)
     record_time: Mapped[datetime] = mapped_column(server_default=func.now())
 
-
     birthday_boy: Mapped["Employee"] = relationship(back_populates="holidays_bb", foreign_keys=[birthday_boy_id])
     responsible: Mapped["Employee"] = relationship(back_populates="holidays_res", foreign_keys=[responsible_id])
-    participants: Mapped[List["Participant"]] = relationship(back_populates="holiday", passive_deletes=True)
-
+    participants: Mapped[List["Participant"]] = relationship(back_populates="holiday", passive_deletes=True,
+                                                             order_by="Participant.id")

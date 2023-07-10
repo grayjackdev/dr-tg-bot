@@ -8,6 +8,7 @@ from os import environ
 load_dotenv()
 
 BOT_TOKEN = environ.get("BOT_TOKEN")
+OFFICE_MANAGER_ID = environ.get("OFFICE_MANAGER_ID")
 GROUP_LINK = environ.get("GROUP_LINK")
 GROUP_ID = environ.get("GROUP_ID")
 
@@ -27,7 +28,8 @@ engine = create_async_engine(
 
 async_session = async_sessionmaker(engine, expire_on_commit=False)
 
-
+system_settings = dict()
+jobs = dict()
 
 
 

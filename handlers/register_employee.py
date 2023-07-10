@@ -12,7 +12,7 @@ async def start_bot(message: Message, state: FSMContext):
     async with async_session() as session:
         async with session.begin():
             user = await session.get(Employee, message.from_user.id)
-    
+
     if not user:
         await NewEmployee.fio.set()
         await message.answer("Введите ваше ФИО")
@@ -31,13 +31,13 @@ async def get_fio(message: Message, state: FSMContext):
 @dp.message_handler(content_types=ContentType.TEXT, state=NewEmployee.birthday)
 async def get_birthday(message: Message, state: FSMContext):
     async with state.proxy() as data:
-        
+
         try:
-            dt= datetime.datetime.strptime(message.text, "%d.%m.%Y")
+            dt = datetime.datetime.strptime(message.text, "%d.%m.%Y")
         except ValueError:
             await message.answer("Неверный формат! Введите вашу дату рождения в формате:\n<i>01.01.1990</i>")
             return
-        
+
         date = datetime.date(dt.year, dt.month, dt.day)
         data['birthday'] = date
     await NewEmployee.next()
@@ -59,28 +59,24 @@ async def get_photo(message: Message, state: FSMContext):
 
 @dp.message_handler(content_types=ContentType.TEXT, state=NewEmployee.wish_list)
 async def get_wish(message: Message, state: FSMContext):
-    
     if message.text == "Пропустить":
         async with state.proxy() as data:
             data["wishes"] = []
-    elif message.text != "Завершить":    
+    elif message.text != "Завершить":
         async with state.proxy() as data:
             if data.get("wishes") is None:
                 data["wishes"] = list()
             data["wishes"].append(Wish(text=message.text))
             await message.answer("Введите еще одно пожелание или завершите данный пункт", reply_markup=finish_markup)
         return
-    
+
     await NewEmployee.next()
-    await message.answer("И последнее. Добавьте свои Банковские реквизиты, номер карты и банк получателя", reply_markup=ReplyKeyboardRemove())
-
-
-
+    await message.answer("И последнее. Добавьте свои Банковские реквизиты, номер карты и банк получателя",
+                         reply_markup=ReplyKeyboardRemove())
 
 
 @dp.message_handler(content_types=ContentType.TEXT, state=NewEmployee.details)
 async def get_details(message: Message, state: FSMContext):
-    
     state_data = await state.get_data()
     details = message.text
     name = state_data.get("name")
@@ -93,12 +89,7 @@ async def get_details(message: Message, state: FSMContext):
             emp = Employee(id=message.from_user.id, fio=name, birthday=birthday, photo=photo_path, details=details)
             emp.wishes.extend(wishes)
             session.add(emp)
-    
 
     await state.reset_state()
     await message.answer("Поздравляю! Вы успешно добавлены в ряды именинников")
     await message.answer("Вот ссылка на чат поздравлений", reply_markup=group_link_markup)
-
-
-
-

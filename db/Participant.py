@@ -5,8 +5,6 @@ from datetime import datetime
 from sqlalchemy import func, ForeignKey, BigInteger
 
 
-
-
 class Participant(Base):
     __tablename__ = "participant"
 
@@ -15,7 +13,5 @@ class Participant(Base):
     holiday_id: Mapped[int] = mapped_column(ForeignKey("holiday.id", ondelete="CASCADE"))
     record_time: Mapped[datetime] = mapped_column(server_default=func.now())
 
-
-    employee: Mapped["Employee"] = relationship(back_populates="participants")
+    employee: Mapped["Employee"] = relationship(back_populates="participants", lazy="joined")
     holiday: Mapped["Holiday"] = relationship(back_populates="participants")
-
